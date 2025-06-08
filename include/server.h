@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.h"
-#include "request.h"
+#include "communication.h"
 
 typedef struct
 {

@@ -2,7 +2,7 @@
 #include <pthread.h>
 
 #include "server.h"
-#include "request.h"
+#include "communication.h"
 
 Server* CreateWebServer(char* addr, uint16_t port)
 {
@@ -62,7 +62,7 @@ void RunWebServer(Server* server)
         client_conn->fd = client_sockfd;
 
         pthread_t tid;
-        if (pthread_create(&tid, NULL, HandleRequest, (void*) client_conn) != 0)
+        if (pthread_create(&tid, NULL, HandleCommunication, (void*) client_conn) != 0)
         {
             perror("pthread_create");
             break;

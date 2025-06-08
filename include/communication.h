@@ -18,5 +18,6 @@ typedef struct
     Request req;
 } ClientConn;
 
-void* HandleRequest(void* data);
+void* HandleCommunication(void* data);
 void ParseRequest(Request* req);
+char* ConstructResponse(Request* req);
