@@ -1,4 +1,5 @@
 #include "request.h"
+#include "response.h"
 
 void* HandleRequest(void* data)
 {
@@ -14,14 +15,21 @@ void* HandleRequest(void* data)
 
     ParseRequest(&client_conn->req);
 
-    char* res = "HTTP/1.1 200 OK\r\n" \
-                "Content-Type: text/plain\r\n" \
-                "Content-Length: 13\r\n" \
-                "\r\n" \
-                "Hello, world!";
+    int free_res = 1;
+    char* res = ConstructResponse(&client_conn->req);
 
+    if (!res)
+    {
+        res = "HTTP/1.1 404 File not found\r\n" \
+                "Content-Type: text/html\r\n" \
+                "\r\n" \
+                "<h1> 404 Page not found </h1>";
+        free_res = 0;
+    }
     send(client_conn->fd, res, strlen(res), 0);
 
+    if (free_res)
+        free(res);
     close(client_conn->fd);
     free(client_conn);
     return NULL;

@@ -1,9 +1,10 @@
 #include "common.h"
 #include "server.h"
-
+#include "routes.h"
 
 int main()
 {
+    ParseRoutesFile();
     Server* server = CreateWebServer("0.0.0.0", 2207);
     if (!server)
     {
@@ -13,4 +14,5 @@ int main()
 
     RunWebServer(server);
     DestroyWebServer(server);
+    DestroyMapRoutes();
 }
