@@ -37,6 +37,7 @@ void ParseRoutesFile()
     free(line);
     fclose(fp);
 
+    // TODO: check if template file exists
     for (int i = 0; i < lines; i++)
         printf("%s => %s\n", map_routes.routes[i], map_routes.templates[i]);
 }
