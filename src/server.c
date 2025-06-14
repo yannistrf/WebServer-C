@@ -1,8 +1,10 @@
 #include <stdlib.h>
-#include <pthread.h>
 
 #include "server.h"
 #include "communication.h"
+
+int server_online = 0;
+int threads_running = 0;
 
 Server* CreateWebServer(char* addr, uint16_t port)
 {
@@ -38,6 +40,7 @@ Server* CreateWebServer(char* addr, uint16_t port)
         return NULL;
     }
 
+    server_online = 1;
     printf("[SERVER LISTENING %s:%hu]\n", server->addr, server->port);
 
     return server;
@@ -45,7 +48,7 @@ Server* CreateWebServer(char* addr, uint16_t port)
 
 void RunWebServer(Server* server)
 {
-    while (1)
+    while (server_online)
     {
         struct sockaddr_in client_addr = {};
         socklen_t client_addr_len = sizeof(client_addr);
@@ -53,7 +56,7 @@ void RunWebServer(Server* server)
         if (client_sockfd < 0)
         {
             perror("accept");
-            break;
+            continue;
         }
 
         ClientConn* client_conn = malloc(sizeof(ClientConn)); // must be freed inside thread!
@@ -65,13 +68,19 @@ void RunWebServer(Server* server)
         if (pthread_create(&tid, NULL, HandleCommunication, (void*) client_conn) != 0)
         {
             perror("pthread_create");
-            break;
+            free(client_conn);
+            continue;
         }
+        pthread_detach(tid);
     }    
 }
 
 void DestroyWebServer(Server* server)
 {
+
+    while (atomic_load(&threads_running) > 0)
+        sleep(1);
+
     if (server)
     {
         if (server->fd)

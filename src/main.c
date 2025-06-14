@@ -12,6 +12,8 @@ int main()
         return 1;
     }
 
+    set_sig_handler();
+
     RunWebServer(server);
     DestroyWebServer(server);
     DestroyMapRoutes();

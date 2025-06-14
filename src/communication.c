@@ -3,6 +3,8 @@
 
 void* HandleCommunication(void* data)
 {
+    atomic_fetch_add(&threads_running, 1);
+
     ClientConn* client_conn = (ClientConn*) data;
     printf("\n--------------------------------\n");
     printf("Client connected: %s:%hu\n",
@@ -22,6 +24,9 @@ void* HandleCommunication(void* data)
 
     close(client_conn->fd);
     free(client_conn);
+    
+    atomic_fetch_sub(&threads_running, 1);
+
     return NULL;
 }
 
