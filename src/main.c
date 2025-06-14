@@ -4,15 +4,15 @@
 
 int main()
 {
+    set_sig_handler();
+
     ParseRoutesFile();
     Server* server = CreateWebServer("0.0.0.0", 2207);
     if (!server)
     {
-        printf("Could not create server\n");
+        log_msg(LOG_ERR, "Could not create server");
         return 1;
     }
-
-    set_sig_handler();
 
     RunWebServer(server);
     DestroyWebServer(server);

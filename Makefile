@@ -22,7 +22,7 @@ BIN = ./bin
 SRC = ./src
 
 # all of our object files
-OBJS = $(BIN)/main.o $(BIN)/signal.o $(BIN)/server.o $(BIN)/communication.o $(BIN)/routes.o
+OBJS = $(BIN)/main.o $(BIN)/signal.o $(BIN)/log.o $(BIN)/server.o $(BIN)/communication.o $(BIN)/routes.o
 
 # rule to build executable
 $(EXEC): $(OBJS)

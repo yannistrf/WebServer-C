@@ -23,12 +23,12 @@ void ParseRoutesFile()
     while (getline(&line, &len, fp) != -1)
     {
         char* route = strtok(line, ": ");
-        printf("route = %s\n", route);
+        log_msg(LOG_DBG, "route = %s", route);
         map_routes.routes[line_cnt] = malloc(sizeof(char) * strlen(route) + 1);
         strcpy(map_routes.routes[line_cnt], route);
 
         char* template = strtok(NULL, "\n");
-        printf("template = %s\n", template);
+        log_msg(LOG_DBG, "template = %s", template);
         map_routes.templates[line_cnt] = malloc(sizeof(char) * strlen(template) + 1);
         strcpy(map_routes.templates[line_cnt], template);
 
@@ -39,7 +39,7 @@ void ParseRoutesFile()
 
     // TODO: check if template file exists
     for (int i = 0; i < lines; i++)
-        printf("%s => %s\n", map_routes.routes[i], map_routes.templates[i]);
+        log_msg(LOG_DBG, "%s => %s", map_routes.routes[i], map_routes.templates[i]);
 }
 
 void DestroyMapRoutes()

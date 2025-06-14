@@ -2,7 +2,7 @@
 
 void terminate_handler(int signum)
 {
-    printf("Terminating server (SIGNUM: %d)\n", signum);
+    log_msg(LOG_WARN, "Terminating server (SIGNUM: %d)", signum);
     fflush(stdout);
     server_online = 0;
 }

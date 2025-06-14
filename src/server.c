@@ -41,7 +41,7 @@ Server* CreateWebServer(char* addr, uint16_t port)
     }
 
     server_online = 1;
-    printf("[SERVER LISTENING %s:%hu]\n", server->addr, server->port);
+    log_msg(LOG_SUCCESS, "[SERVER LISTENING %s:%hu]", server->addr, server->port);
 
     return server;
 }

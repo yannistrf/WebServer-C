@@ -13,8 +13,19 @@
 #include <pthread.h>
 #include <stdatomic.h>
 #include <signal.h>
+#include <stdarg.h>
 
 extern int server_online;
 extern int threads_running;
 
 void set_sig_handler();
+
+typedef enum {
+    LOG_DBG,
+    LOG_SUCCESS,
+    LOG_WARN,
+    LOG_ERR,
+    LOG_LEVEL_LEN
+} LOG_LEVEL;
+
+void log_msg(LOG_LEVEL level, const char* fmt, ...);

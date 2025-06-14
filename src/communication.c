@@ -6,8 +6,8 @@ void* HandleCommunication(void* data)
     atomic_fetch_add(&threads_running, 1);
 
     ClientConn* client_conn = (ClientConn*) data;
-    printf("\n--------------------------------\n");
-    printf("Client connected: %s:%hu\n",
+    log_msg(LOG_DBG, "\n--------------------------------");
+    log_msg(LOG_DBG, "Client connected: %s:%hu",
             client_conn->addr, client_conn->port);
 
 
@@ -33,11 +33,11 @@ void* HandleCommunication(void* data)
 void ParseRequest(Request* req)
 {
     req->type = strtok(req->buf, " ");
-    printf("Request type: %s\n", req->type);
+    log_msg(LOG_DBG, "Request type: %s", req->type);
     req->uri = strtok(NULL, " ");
-    printf("URI: %s\n", req->uri);
+    log_msg(LOG_DBG, "URI: %s", req->uri);
     req->protocol = strtok(NULL, "\r\n");
-    printf("Protocol: %s\n", req->protocol);
+    log_msg(LOG_DBG, "Protocol: %s", req->protocol);
 }
 
 void BuildResponseHeader(Request* req, Response* res)
@@ -97,21 +97,21 @@ void ConstructResponsePkt(Response* res)    // must free res.pkt !!!
         return;
     }
 
-    printf("File = %s\n", res->resource_location);
+    log_msg(LOG_DBG, "File = %s", res->resource_location);
     FILE* fp = fopen(res->resource_location, "r");  // file existance is checked in BuildResponseHeader
     fseek(fp, 0, SEEK_END);
     long file_size = ftell(fp);
-    printf("FILE SIZE = %ld\n", file_size);
+    log_msg(LOG_DBG, "FILE SIZE = %ld", file_size);
     rewind(fp);
     
     //                                  <status_code>                           %d  %s  \0
     size_t pkt_size = strlen(PKT_TEMPLATE) + 3 + strlen(res->desc) + file_size - 2 - 2 + 1;
     res->pkt = malloc(pkt_size);
     sprintf(res->pkt, PKT_TEMPLATE, res->status_code, res->desc);
-    printf("HEADER SIZE = %ld\n", strlen(res->pkt));
+    log_msg(LOG_DBG, "HEADER SIZE = %ld", strlen(res->pkt));
 
     fread(res->pkt + strlen(res->pkt), sizeof(char), file_size, fp);
     res->pkt[pkt_size - 1] = '\0';
-    printf("PACKET SIZE = %ld\n", strlen(res->pkt));
+    log_msg(LOG_DBG, "PACKET SIZE = %ld", strlen(res->pkt));
     fclose(fp);
 }
